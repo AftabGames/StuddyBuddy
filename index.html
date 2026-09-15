@@ -1,342 +1,709 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
-<title>📚 StuddyBuddy </title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StuddyBuddy</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#172033}button,input{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}.card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 7px 25px #17203312}
-#loading{position:fixed;inset:0;background:#0b1224;color:#fff;z-index:99;display:grid;place-items:center}.load{width:80%;max-width:400px;text-align:center}.bar{height:8px;background:#273451;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:#58a6ff;transition:.3s}
-.auth{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#eaf3ff,#f8f0ff)}.authbox{width:min(430px,95vw)}.logo{font-size:32px;font-weight:900}.logo span{color:#3985f5}
-.tabs{display:flex;gap:8px;margin:20px 0}.tabs button,.nav button,.secondary{border:0;border-radius:10px;padding:10px 14px;background:#e8eef8;font-weight:700}.tabs .on,.nav .on{background:#3985f5;color:#fff}
-input{width:100%;padding:13px;border:1px solid #d5deed;border-radius:10px;margin:7px 0 14px;outline:0}.primary{border:0;background:#3985f5;color:white;border-radius:10px;padding:12px 16px;font-weight:800}.full{width:100%}.msg{min-height:22px;font-weight:700}.err{color:#d83f3f}.ok{color:#14834d}
-#app{display:none}.top{position:sticky;top:0;z-index:10;display:flex;gap:10px;align-items:center;padding:14px 20px;background:#fff;border-bottom:1px solid #e0e6f0}.top .logo{font-size:24px;margin-right:auto}.pill{padding:8px 12px;border-radius:20px;background:#eaf2ff;font-weight:700}
-.nav{display:flex;gap:7px;padding:10px 20px;background:#fff;border-bottom:1px solid #e0e6f0;overflow:auto}.nav button{white-space:nowrap}
-main{max-width:1100px;margin:auto;padding:24px 16px 50px}.page{display:none}.page.onpage{display:block}.hero{padding:24px;border-radius:20px;background:linear-gradient(135deg,#3985f5,#6b73e8);color:#fff;margin-bottom:16px}.xpbar{height:10px;background:#ffffff45;border-radius:20px;overflow:hidden}.xpbar i{display:block;height:100%;width:0;background:#50d698}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}.stat{background:#fff;padding:18px;border-radius:16px}.stat b{display:block;font-size:28px;margin-top:6px}.subject{border:0;text-align:left;background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 20px #1720330d}.subject:hover{transform:translateY(-2px)}
-.lesson{margin-top:16px}.lesson article{padding:15px 0;border-top:1px solid #e2e7f0;line-height:1.6}.done{background:#dcf7e8!important;color:#147b49}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.right{margin-left:auto}
-.q{margin:15px 0;padding:17px;border:1px solid #dfe5ef;border-radius:14px}.answers{display:grid;gap:8px}.answers button{padding:11px;text-align:left;border:1px solid #d5deed;background:#f8faff;border-radius:9px}.answers .selected{background:#dceaff;border-color:#3985f5}.answers .correct{background:#dcf7e8;border-color:#36a873}.answers .wrong{background:#ffe1e1;border-color:#d94b4b}
-.bot{height:430px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;background:#f6f8fc;border-radius:12px;padding:12px}.bubble{max-width:80%;padding:10px 13px;border-radius:13px;margin:7px 0;white-space:pre-wrap}.ai{background:#e5edf9}.mine{background:#3985f5;color:#fff;margin-left:auto}.botform{display:flex;gap:8px;margin-top:9px}.botform input{margin:0}.botform button{width:auto}
-.badge{display:flex;gap:12px;align-items:center}.icon{font-size:30px}.locked{opacity:.4}.toast{position:fixed;right:18px;bottom:18px;background:#172033;color:#fff;padding:13px 17px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.2s;z-index:100}.toast.show{opacity:1;transform:none}
-.dark{background:#0f1726;color:#edf2fb}.dark .card,.dark .stat,.dark .subject,.dark .q,.dark .top,.dark .nav{background:#182337;color:#edf2fb;border-color:#2b3850}.dark .nav button,.dark .tabs button,.dark .secondary{background:#26354d;color:#fff}.dark .nav .on,.dark .tabs .on{background:#3985f5}.dark input{background:#111a2a;color:#fff;border-color:#34435d}.dark .messages{background:#111a2a}.dark .answers button{background:#1a273c;color:#fff;border-color:#34435d}
+*{box-sizing:border-box}
+:root{
+ --bg:#f4f7ff;--card:#fff;--text:#172033;--muted:#6b7280;
+ --primary:#3478f6;--primary2:#6c4df6;--line:#e5e9f2;
+ --good:#18a957;--bad:#e5484d;--shadow:0 12px 35px rgba(34,52,100,.10)
+}
+body.dark{--bg:#0d1324;--card:#151d33;--text:#f3f6ff;--muted:#aab4ca;--line:#29334d;--shadow:0 12px 35px rgba(0,0,0,.25)}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
-.groupgrid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.chatroom{height:330px;overflow:auto;background:#f6f8fc;border-radius:12px;padding:12px}.roommsg{padding:9px 12px;border-radius:12px;background:#e5edf9;margin:7px 0}.roommsg.me{background:#3985f5;color:#fff;margin-left:20%;}.task{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #e2e7f0}.task.done{text-decoration:line-through;opacity:.65}.timer{font-size:44px;font-weight:900;text-align:center;padding:15px}.promptrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.prompt{border:0;border-radius:18px;padding:8px 12px;background:#e8eef8;font-weight:700}.typing{opacity:.6;font-style:italic}.bothead{display:flex;align-items:center;gap:10px;margin-bottom:10px}.botavatar{font-size:32px}.muted{opacity:.7}.dark .chatroom{background:#111a2a}.dark .roommsg{background:#26354d}.dark .prompt{background:#26354d;color:#fff}.dark .task{border-color:#2b3850}@media(max-width:760px){.groupgrid{grid-template-columns:1fr}.roommsg.me{margin-left:8%}}
-.topicgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:18px}.topiccard{display:flex;align-items:center;gap:14px;text-align:left;border:1px solid #dfe5ef;background:#fff;border-radius:16px;padding:16px;cursor:pointer;transition:.2s}.topiccard:hover{transform:translateY(-3px);box-shadow:0 8px 22px #17203318}.topiccard.done{border-color:#36a873;background:#dcf7e8}.topicicon{font-size:34px}.topiccard b{display:block}.topiccard small{display:block;margin-top:6px;opacity:.7}.topiccontent{margin-top:20px;padding:20px;border-radius:16px;background:#f6f8fc}.topiccontent article{padding:12px 0;border-top:1px solid #dfe5ef;line-height:1.6}.dark .topiccard{background:#182337;color:#edf2fb;border-color:#2b3850}.dark .topiccontent{background:#111a2a}.dark .topiccontent article{border-color:#2b3850}</style>
+/* Loading */
+#loading-screen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#1677ff,#5b3df5);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.45s}
+.loading-logo{font-size:70px}.loading-title{font-size:46px;font-weight:800;margin:10px 0 30px}.loading-sub{opacity:.9;margin-bottom:22px}
+.progress{width:310px;height:9px;background:#ffffff35;border-radius:20px;overflow:hidden}.progress>div{height:100%;width:0;background:white;border-radius:20px;transition:1s}
+
+/* Auth */
+#auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px;background:linear-gradient(135deg,#1677ff,#5b3df5)}
+.auth-wrap{width:min(430px,100%)}.brand{text-align:center;color:white;margin-bottom:18px}.brand h1{font-size:42px;margin:8px 0}.brand p{margin:0;opacity:.9}
+.auth-card{background:white;border-radius:24px;padding:25px;box-shadow:0 20px 60px #0003}.tabs{display:flex;gap:8px;margin-bottom:20px}.tabs button{flex:1;border:0;border-radius:12px;padding:12px;background:#edf0f6}.tabs .active{background:var(--primary);color:white}
+.form{display:flex;flex-direction:column;gap:12px}.form input{padding:13px;border:1px solid #d8deea;border-radius:11px;outline:0}.form input:focus{border-color:var(--primary)}.primary{border:0;border-radius:11px;padding:13px;background:linear-gradient(90deg,var(--primary),var(--primary2));color:white;font-weight:700}.msg{text-align:center;min-height:20px;font-size:14px}.error{color:var(--bad)}.success{color:var(--good)}
+.demo-note{font-size:12px;color:#777;text-align:center;margin-top:15px}
+
+/* App */
+#app{min-height:100vh;display:flex}.sidebar{width:245px;background:var(--card);border-right:1px solid var(--line);padding:22px 15px;position:fixed;inset:0 auto 0 0;z-index:20}.side-brand{font-size:24px;font-weight:900;padding:5px 12px 25px}.side-brand span{color:var(--primary)}.nav{display:flex;flex-direction:column;gap:6px}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:12px 14px;border-radius:11px}.nav button:hover,.nav button.active{background:#eaf1ff;color:var(--primary);font-weight:700}.dark .nav button:hover,.dark .nav button.active{background:#202c49}.side-bottom{position:absolute;bottom:18px;left:15px;right:15px}.main{margin-left:245px;width:calc(100% - 245px);padding:25px 32px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.topbar h2{margin:0;font-size:28px}.user-chip{display:flex;align-items:center;gap:10px}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3478f6,#6c4df6);color:white;display:grid;place-items:center;font-weight:800}
+.page{display:none}.page.active{display:block}.hero{background:linear-gradient(120deg,#2877f6,#6549f5);color:white;border-radius:22px;padding:30px;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:20px;align-items:center}.hero h1{margin:0 0 8px;font-size:30px}.hero p{margin:0;opacity:.9}.hero-icon{font-size:72px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:18px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.stat-label{color:var(--muted);font-size:13px}.stat-value{font-size:27px;font-weight:800;margin-top:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card h3{margin-top:0}.xpbar{height:11px;background:#e7ebf3;border-radius:20px;overflow:hidden}.xpbar div{height:100%;background:linear-gradient(90deg,#3478f6,#7b4df6);border-radius:20px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quick button{padding:15px;border:1px solid var(--line);background:var(--card);border-radius:13px;text-align:left;color:var(--text)}.quick button b{display:block;margin-bottom:4px}
+.challenge{display:flex;align-items:center;justify-content:space-between;gap:15px}.challenge button{border:0;border-radius:10px;padding:10px 14px;background:#1aaf5d;color:white;font-weight:700}
+
+/* Lessons */
+.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.subject{padding:20px;border:1px solid var(--line);background:var(--card);border-radius:17px;box-shadow:var(--shadow)}.subject .emoji{font-size:34px}.subject h3{margin:10px 0 5px}.subject p{color:var(--muted);font-size:14px}.lesson-list{display:grid;gap:12px;margin-top:16px}.lesson{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:14px}.lesson button{border:0;border-radius:9px;padding:9px 13px;background:var(--primary);color:white}.lesson.done{border-color:#5ac889}.lesson.done button{background:#18a957}.lesson-content{margin-top:18px;line-height:1.7}.lesson-content h3{margin-top:0}.back{border:0;background:transparent;color:var(--primary);padding:0;margin-bottom:14px}
+
+/* Quiz */
+.quiz-card{max-width:800px;margin:auto}.answers{display:grid;gap:10px;margin-top:18px}.answer{padding:14px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;text-align:left}.answer.correct{background:#dff8e9;border-color:#4ac17b;color:#116b39}.answer.wrong{background:#ffe4e4;border-color:#ef7777;color:#9e2525}.dark .answer.correct{background:#173d2a}.dark .answer.wrong{background:#4a2024}.quiz-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.quiz-actions button{border:0;border-radius:10px;padding:11px 15px;background:var(--primary);color:white}
+
+/* Bot */
+.chat{max-width:850px;margin:auto}.chatbox{height:430px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}.bubble{max-width:78%;padding:11px 14px;border-radius:14px;margin:9px 0;line-height:1.5}.bot{background:#edf2ff}.dark .bot{background:#202c49}.me{background:var(--primary);color:white;margin-left:auto}.chat-input{display:flex;gap:9px;margin-top:10px}.chat-input input{flex:1;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--text)}.chat-input button{border:0;border-radius:11px;padding:0 20px;background:var(--primary);color:white}
+
+/* Achievements/Profile */
+.achievements{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.achievement{padding:20px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:17px}.achievement .big{font-size:40px;filter:grayscale(1);opacity:.4}.achievement.unlocked .big{filter:none;opacity:1}.achievement small{color:var(--muted)}.profile{max-width:600px;margin:auto;text-align:center}.profile .avatar{width:90px;height:90px;font-size:32px;margin:auto}.profile h2{font-size:28px}.settings{display:grid;gap:10px}.settings button{padding:13px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;text-align:left}
+
+
+/* Profile pictures */
+.profile-pfp-wrap{display:flex;justify-content:center;margin-bottom:10px}
+.profile-pfp{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-size:58px;background:#eaf2ff;overflow:hidden;border:4px solid #fff;box-shadow:0 8px 22px rgba(34,52,100,.12)}
+.profile-pfp img{width:100%;height:100%;object-fit:cover}
+.dark .profile-pfp{background:#26354d;border-color:#182337}
+
+/* Global admin broadcasts */
+.global-notice{margin:0 0 18px;padding:15px 17px;border-radius:15px;background:#eaf2ff;border:1px solid #bcd5ff}
+.global-notice .poll-opts{display:grid;gap:8px;margin-top:10px}
+.global-notice .poll-opts button{border:1px solid #d8e2f5;border-radius:10px;padding:10px;text-align:left;background:white;color:#172033}
+.dark .global-notice{background:#182b48;border-color:#36557d}
+.dark .global-notice .poll-opts button{background:#26354d;color:#f3f6ff;border-color:#3a4b69}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.admin-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);margin-bottom:10px}
+.admin-card .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:700px){.admin-grid{grid-template-columns:1fr}.admin-card .row{grid-template-columns:1fr}}
+
+/* Mobile */
+.menu{display:none}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;padding:18px}.menu{display:block;border:0;background:var(--card);color:var(--text);font-size:24px}.stats{grid-template-columns:repeat(2,1fr)}.subject-grid,.achievements{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+@media(max-width:600px){.hero{padding:22px}.hero-icon{font-size:45px}.hero h1{font-size:24px}.stats{grid-template-columns:1fr 1fr}.subject-grid,.achievements{grid-template-columns:1fr}.topbar h2{font-size:23px}}
+</style>
 </head>
 <body>
-<div id="loading"><div class="load"><div class="logo">Studdy<span>Buddy</span></div><p>Loading your study space...</p><div class="bar"><i id="loadbar"></i></div></div></div>
 
-<section id="auth" class="auth">
-<div class="card authbox">
-<div class="logo">Studdy<span>Buddy</span></div><p>Learn • Practice • Level up 🚀</p>
-<div class="tabs"><button id="loginTab" class="on">Login</button><button id="signupTab">Sign up</button></div>
-<form id="authForm">
-<label>Username</label><input id="username" maxlength="20" required autocomplete="username">
-<label>Password</label><input id="password" minlength="4" required type="password" autocomplete="current-password">
-<div id="authMsg" class="msg"></div><button id="authButton" class="primary full">Login</button>
-</form>
-<small>Accounts and progress are stored locally in your browser.</small>
-</div></section>
-
-<div id="app">
-<header class="top"><div class="logo">Studdy<span>Buddy</span></div><div id="pill" class="pill"></div><button id="theme" class="secondary">🌙</button><button id="logout" class="secondary">Log out</button></header>
-<nav class="nav">
-<button data-page="dashboard" class="on">🏠 Dashboard</button><button data-page="learn">📚 Learn</button><button data-page="quiz">🧠 Quiz</button><button data-page="bot">🤖 StuddyBot</button><button data-page="achievements">🏆 Achievements</button><button data-page="leaderboard">🏅 Leaderboard</button><button data-page="group">👥 Group Study</button><button data-page="profile">👤 Profile</button>
-</nav>
-<main>
-<section id="dashboard" class="page onpage">
-<div class="hero"><h1>Welcome, <span id="name"></span>! 👋</h1><div class="row"><b id="level"></b><span id="xptext" class="right"></span></div><div class="xpbar"><i id="xpbar"></i></div></div>
-<div class="grid"><div class="stat">⭐ XP<b id="xp">0</b></div><div class="stat">🔥 Streak<b id="streak">0</b></div><div class="stat">📚 Lessons<b id="lessonsDone">0</b></div><div class="stat">🧠 Quizzes<b id="quizzes">0</b></div></div>
-<div class="card" style="margin-top:16px"><h2>🎁 Daily Login Reward</h2><p>Log in once each day to automatically receive <b>+25 XP</b>.</p><h2>🎯 Daily Challenge</h2><p id="daily"></p><button id="dailyBtn" class="primary">Claim +100 XP</button></div>
-</section>
-
-<section id="learn" class="page"><h1>📚 Learn</h1><p>Complete lessons to earn XP.</p><div id="subjects" class="grid"></div><div id="lessonArea"></div></section>
-<section id="quiz" class="page"><h1>🧠 Quiz</h1><p>Answer all questions. Perfect score = 100 XP, otherwise = 50 XP.</p><div id="quizArea"></div></section>
-<section id="bot" class="page"><h1>🤖 StuddyBot</h1><p>Your study assistant — chat naturally, ask follow-ups, get explanations, examples, quizzes and study tips.</p><div class="card bot"><div class="bothead"><div class="botavatar">🤖</div><div><b>StuddyBot</b><div class="muted">Chat-style study assistant</div></div></div><div class="promptrow"><button class="prompt" onclick="quickPrompt('Explain this topic simply')">Explain simply</button><button class="prompt" onclick="quickPrompt('Quiz me')">Quiz me</button><button class="prompt" onclick="quickPrompt('Make me a study plan')">Study plan</button><button class="prompt" onclick="quickPrompt('Give me a fun science fact')">Fun fact</button></div><div id="messages" class="messages"></div><form id="botForm" class="botform"><input id="botInput" placeholder="Message StuddyBot..." autocomplete="off"><button class="primary">Send</button></form></div></section>
-<section id="group" class="page"><h1>👥 Group Study</h1><p>Study together with a room code, shared tasks, chat and a focus timer.</p><div class="groupgrid"><div><div id="groupSetup" class="card"><h2>🚪 Create or Join a Room</h2><label>Room name</label><input id="roomName" placeholder="Chemistry Squad"><label>Room code</label><input id="roomCode" maxlength="8" placeholder="Leave blank to create one"><div class="row"><button class="primary" id="createRoom">Create Room</button><button class="secondary" id="joinRoom">Join Room</button></div><p class="muted">In this single-file version, rooms sync between tabs/windows on the same browser. A real multi-device group room needs an online database/backend.</p></div><div id="groupRoom" class="card hidden"><div class="row"><div><h2 id="roomTitle" style="margin-bottom:4px"></h2><b id="roomCodeShow"></b></div><button class="secondary right" id="leaveRoom">Leave</button></div><hr><h3>💬 Group Chat</h3><div id="roomMessages" class="chatroom"></div><form id="roomChatForm" class="botform"><input id="roomChatInput" placeholder="Message your study group..." autocomplete="off"><button class="primary">Send</button></form></div></div><div><div class="card"><h2>⏱️ Focus Timer</h2><div id="timer" class="timer">25:00</div><div class="row"><button class="primary" id="timerStart">Start</button><button class="secondary" id="timerReset">Reset</button></div><p class="muted">Try a 25-minute focused study session.</p></div><div class="card" style="margin-top:16px"><h2>✅ Shared Tasks</h2><div id="tasks"></div><form id="taskForm" class="botform"><input id="taskInput" placeholder="Add a study task..."><button class="primary">Add</button></form></div></div></div></section><section id="achievements" class="page"><h1>🏆 Achievements</h1><div id="achievementGrid" class="grid"></div></section>
-<section id="leaderboard" class="page">
-<h1>🏅 Leaderboard</h1>
-<p>See how much XP each local StuddyBuddy account has earned on this browser.</p>
-<div class="card">
-<div id="leaderboardList"></div>
-<p class="muted" style="margin-bottom:0">Note: this local version cannot see accounts from other devices or browsers.</p>
+<div id="loading-screen">
+  <div class="loading-logo">📚</div>
+  <div class="loading-title">StuddyBuddy</div>
+  <div class="loading-sub">Preparing your learning space...</div>
+  <div class="progress"><div id="loadbar"></div></div>
 </div>
+
+<section id="auth-page">
+  <div class="auth-wrap">
+    <div class="brand"><h1>📚 StuddyBuddy</h1><p>Your personal learning space</p></div>
+    <div class="auth-card">
+      <div class="tabs">
+        <button id="login-tab" class="active">Login</button>
+        <button id="signup-tab">Sign Up</button>
+      </div>
+
+      <form id="login-form" class="form">
+        <input id="login-user" placeholder="Username" required autocomplete="username">
+        <input id="login-pass" type="password" placeholder="Password" required autocomplete="current-password">
+        <button class="primary">Login 🚀</button>
+        <div id="login-msg" class="msg"></div>
+      </form>
+
+      <form id="signup-form" class="form hidden">
+        <input id="signup-user" placeholder="Choose a username" required>
+        <input id="signup-pass" type="password" placeholder="Create a password" required>
+        <input id="signup-confirm" type="password" placeholder="Confirm password" required>
+        <button class="primary">Create Account 🎉</button>
+        <div id="signup-msg" class="msg"></div>
+      </form>
+      <div class="demo-note">Your account data is saved in this browser.</div>
+    </div>
+  </div>
 </section>
-<section id="profile" class="page"><h1>👤 Profile</h1><div class="card"><div style="font-size:52px" id="profilePfp">🎓</div><h2 id="profileName"></h2><p id="profileStats"></p>
-<label>PFP</label><input id="pfpInput" maxlength="4" placeholder="🎓">
-<label>Description</label><input id="descInput" maxlength="80" placeholder="Tell people about you...">
-<button id="saveProfile" class="primary" style="margin-bottom:12px">Save profile</button>
-<button id="profileTheme" class="secondary">Toggle dark mode</button><hr><button id="reset" class="primary" style="background:#df4e4e">Reset progress</button></div></section>
-</main></div><div id="toast" class="toast"></div>
+
+<div id="app" class="hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">📚 <span>Studdy</span>Buddy</div>
+    <div class="nav">
+      <button data-page="home">🏠 Dashboard</button>
+      <button data-page="lessons">📚 Learn</button>
+      <button data-page="quiz">📝 Quizzes</button>
+      <button data-page="bot">🤖 StuddyBot</button>
+      <button data-page="achievements">🏆 Achievements</button>
+      <button data-page="profile">👤 Profile</button>
+    </div>
+    <div class="side-bottom">
+      <div class="nav">
+        <button id="dark-btn">🌙 Dark Mode</button>
+        <button id="logout-btn">🚪 Log Out</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><button class="menu" id="menu-btn">☰</button> <h2 id="page-title" style="display:inline-block">Dashboard</h2></div>
+      <div class="user-chip"><span id="top-user">Student</span><div class="avatar" id="top-avatar">S</div></div>
+    </div>
+    <div id="global-notice" class="global-notice hidden"></div>
+
+    <section id="page-home" class="page active">
+      <div class="hero"><div><h1 id="welcome">Welcome back!</h1><p>Ready to learn something awesome today?</p></div><div class="hero-icon">🚀</div></div>
+      <div class="stats">
+        <div class="card"><div class="stat-label">⭐ XP</div><div class="stat-value" id="xp-stat">0</div></div>
+        <div class="card"><div class="stat-label">🔥 Streak</div><div class="stat-value" id="streak-stat">0 days</div></div>
+        <div class="card"><div class="stat-label">🏅 Level</div><div class="stat-value" id="level-stat">1</div></div>
+        <div class="card"><div class="stat-label">📚 Lessons</div><div class="stat-value" id="lesson-stat">0</div></div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>📈 Level Progress</h3>
+          <p id="level-text">Level 1 • 0 / 500 XP</p>
+          <div class="xpbar"><div id="xp-fill"></div></div>
+        </div>
+        <div class="card">
+          <h3>⚡ Quick Actions</h3>
+          <div class="quick">
+            <button onclick="showPage('lessons')"><b>📖 Learn</b><small>Explore lessons</small></button>
+            <button onclick="showPage('quiz')"><b>📝 Quiz</b><small>Test your knowledge</small></button>
+            <button onclick="showPage('bot')"><b>🤖 StuddyBot</b><small>Ask for help</small></button>
+            <button onclick="showPage('achievements')"><b>🏆 Awards</b><small>See achievements</small></button>
+          </div>
+        </div>
+      </div>
+      <div class="card challenge" style="margin-top:18px">
+        <div><h3 style="margin:0 0 5px">🎯 Daily Challenge</h3><div id="challenge-text">Complete a lesson today for +100 bonus XP!</div></div>
+        <button id="challenge-btn">Claim +100 XP</button>
+      </div>
+    </section>
+
+    <section id="page-lessons" class="page">
+      <div id="lesson-browser">
+        <div class="subject-grid" id="subjects"></div>
+      </div>
+      <div id="lesson-view" class="hidden">
+        <button class="back" onclick="closeLesson()">← Back to subjects</button>
+        <div class="card">
+          <h2 id="lesson-title"></h2>
+          <div id="lesson-content" class="lesson-content"></div>
+          <button class="primary" id="complete-lesson" style="margin-top:18px">✅ Complete Lesson (+25 XP)</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-quiz" class="page">
+      <div class="card quiz-card" id="quiz-start">
+        <h1>📝 General Knowledge Quiz</h1>
+        <p>5 questions • Earn XP by answering correctly.</p>
+        <button class="primary" onclick="startQuiz()">Start Quiz 🚀</button>
+      </div>
+      <div class="card quiz-card hidden" id="quiz-game">
+        <div style="color:var(--muted)" id="quiz-count"></div>
+        <h2 id="question"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="explanation" style="margin-top:15px"></div>
+        <div class="quiz-actions"><span id="score"></span><button id="next-btn" class="hidden" onclick="nextQuestion()">Next →</button></div>
+      </div>
+      <div class="card quiz-card hidden" id="quiz-result">
+        <h1>🎉 Quiz Complete!</h1><h2 id="result-score"></h2><p id="result-xp"></p>
+        <button class="primary" onclick="resetQuiz()">Try Again</button>
+      </div>
+    </section>
+
+    <section id="page-bot" class="page">
+      <div class="chat">
+        <div class="chatbox" id="chatbox">
+          <div class="bubble bot">Hey! 👋 I'm <b>StuddyBot</b>. Ask me about math, physics, chemistry, biology, Python, space, or study tips!</div>
+        </div>
+        <div class="chat-input"><input id="bot-input" placeholder="Ask StuddyBot something..." autocomplete="off"><button id="bot-send">Send</button></div>
+      </div>
+    </section>
+
+    <section id="page-achievements" class="page">
+      <div class="achievements" id="achievement-grid"></div>
+    </section>
+
+    <section id="page-profile" class="page">
+      <div class="card profile">
+        <div class="profile-pfp-wrap"><div class="profile-pfp" id="profile-pfp">🎓</div></div>
+        <h2 id="profile-name">Student</h2>
+        <p id="profile-meta"></p>
+
+        <div class="stats" style="grid-template-columns:repeat(3,1fr);text-align:left">
+          <div class="card"><div class="stat-label">XP</div><div class="stat-value" id="profile-xp">0</div></div>
+          <div class="card"><div class="stat-label">Level</div><div class="stat-value" id="profile-level">1</div></div>
+          <div class="card"><div class="stat-label">Streak</div><div class="stat-value" id="profile-streak">0</div></div>
+        </div>
+
+        <div class="settings" style="text-align:left">
+          <label><b>Profile picture</b></label>
+          <input id="pfp-file" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+          <button id="remove-pfp">🗑️ Use default picture</button>
+
+          <label><b>PFP emoji</b></label>
+          <input id="pfp-emoji" maxlength="4" placeholder="🎓">
+
+          <label><b>Description</b></label>
+          <input id="profile-desc" maxlength="100" placeholder="Tell people about you...">
+
+          <button id="save-profile" class="primary">💾 Save Profile</button>
+          <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
+          <button onclick="logout()">🚪 Log Out</button>
+        </div>
+      </div>
+    </section>
+    <section id="page-admin" class="page">
+      <div class="hero">
+        <div><h1>🛠️ Admin Panel</h1><p>Owner controls for <b>AftabMakes</b>.</p></div>
+        <div class="hero-icon">👑</div>
+      </div>
+
+      <div class="admin-grid" style="margin-top:18px">
+        <div class="card admin-card">
+          <h2>📢 Global Announcement</h2>
+          <p style="color:var(--muted)">Shown to everyone using this StuddyBuddy build in the same browser storage.</p>
+          <input id="admin-announcement" maxlength="180" placeholder="Type an announcement...">
+          <button id="send-announcement" class="primary">Publish Announcement</button>
+        </div>
+
+        <div class="card admin-card">
+          <h2>📊 Global Poll</h2>
+          <input id="poll-question" maxlength="140" placeholder="Poll question">
+          <div class="row">
+            <input id="poll-a" maxlength="60" placeholder="Option A">
+            <input id="poll-b" maxlength="60" placeholder="Option B">
+          </div>
+          <div class="row">
+            <input id="poll-c" maxlength="60" placeholder="Option C (optional)">
+            <input id="poll-d" maxlength="60" placeholder="Option D (optional)">
+          </div>
+          <button id="create-poll" class="primary">Create Global Poll</button>
+        </div>
+      </div>
+
+      <div class="card admin-card" style="margin-top:18px">
+        <h2>🧹 Broadcast Tools</h2>
+        <button id="clear-broadcasts">Clear Announcement & Poll</button>
+      </div>
+    </section>
+  </main>
+</div>
 
 <script>
-"use strict";
-const KEY="StuddyBuddyAccountsV5",CURRENT="StuddyBuddyCurrentV5",THEME="StuddyBuddyDarkV5";
-const lessons=[
-["math1","Mathematics","➗","Algebra Basics","Learn variables, expressions and simple equations. Example: 2x + 4 = 10 gives x = 3."],
-["math2","Mathematics","📐","Geometry Basics","Triangle angles add to 180°. Rectangle area = length × width. Triangle area = ½ × base × height."],
-["math3","Mathematics","📊","Linear Equations","A linear equation can be rearranged to find an unknown. Keep both sides balanced while simplifying."],
-["math4","Mathematics","🔢","Quadratic Equations","A quadratic has the form ax² + bx + c = 0. It can be solved by factorisation, completing the square or the quadratic formula."],
-["math5","Mathematics","📈","Sequences","An arithmetic sequence changes by a common difference. A geometric sequence changes by a common ratio."],
-["math6","Mathematics","🎲","Probability","Probability measures how likely an event is. For equally likely outcomes, P(event) = favourable outcomes ÷ total outcomes."],
-["math7","Mathematics","📐","Trigonometry","In a right triangle, sin θ = opposite/hypotenuse, cos θ = adjacent/hypotenuse and tan θ = opposite/adjacent."],
-["math8","Mathematics","∫","Calculus Introduction","A derivative describes a rate of change. An integral can be used to find accumulated quantities such as area."],
+/* =========================
+   STUDDYBUDDY V3
+   Everything is in this file.
+   ========================= */
 
-["phy1","Physics","⚛️","Newton's Second Law","F = ma. Force is measured in newtons, mass in kilograms and acceleration in m/s²."],
-["phy2","Physics","🚀","Speed and Velocity","Speed = distance ÷ time. Velocity is speed with a specified direction."],
-["phy3","Physics","🏃","Motion","Displacement describes change in position. Acceleration is the rate at which velocity changes."],
-["phy4","Physics","🔋","Work and Energy","Work is done when a force causes displacement. Kinetic energy depends on mass and speed."],
-["phy5","Physics","🌍","Gravitation","Objects attract each other through gravity. Near Earth, gravitational acceleration is about 9.8 m/s²."],
-["phy6","Physics","🌊","Waves","Waves transfer energy. Wave speed can be written as v = fλ, where f is frequency and λ is wavelength."],
-["phy7","Physics","💡","Electricity","Electric current is the flow of charge. Ohm's law relates voltage, current and resistance: V = IR."],
-["phy8","Physics","🌡️","Thermal Physics","Temperature describes the thermal state of matter. Heat is energy transferred because of a temperature difference."],
+const ACCOUNTS_KEY = "studdyBuddyV3Accounts";
+const CURRENT_KEY = "studdyBuddyV3CurrentUser";
+const THEME_KEY = "studdyBuddyV3Dark";
 
-["chem1","Chemistry","🧪","Atoms","Atoms contain protons and neutrons in the nucleus and electrons around the nucleus."],
-["chem2","Chemistry","🔬","The Mole","One mole contains about 6.022 × 10²³ particles."],
-["chem3","Chemistry","⚗️","Chemical Reactions","Chemical reactions rearrange atoms to form new substances. Equations must conserve atoms."],
-["chem4","Chemistry","🧊","States of Matter","Solids have fixed shape and volume, liquids have fixed volume, and gases expand to fill their container."],
-["chem5","Chemistry","📋","Periodic Table","The periodic table arranges elements by atomic number and groups elements with related properties."],
-["chem6","Chemistry","🧬","Chemical Bonding","Ionic bonding involves electron transfer, while covalent bonding involves sharing electrons."],
-["chem7","Chemistry","⚖️","Acids and Bases","Acids have pH below 7, neutral solutions are around pH 7, and bases have pH above 7."],
-["chem8","Chemistry","🔥","Thermochemistry","Chemical reactions can release or absorb energy. Exothermic processes release energy to the surroundings."],
+const ADMIN_USERNAME = "AftabMakes";
+const BROADCAST_KEY = "studdyBuddyGlobalBroadcastV1";
 
-["bio1","Biology","🧬","Cells","The cell is the basic structural and functional unit of life."],
-["bio2","Biology","🌱","Photosynthesis","Plants use light energy to make glucose from carbon dioxide and water, releasing oxygen."],
-["bio3","Biology","🫁","Respiration","Cells release usable energy from food. Aerobic respiration uses oxygen and produces carbon dioxide and water."],
-["bio4","Biology","🧬","DNA and Genes","DNA stores genetic information. Genes are sections of DNA that contribute to inherited characteristics."],
-["bio5","Biology","🩸","Human Circulation","The circulatory system transports oxygen, nutrients and wastes using the heart, blood and blood vessels."],
-["bio6","Biology","🧠","Nervous System","The nervous system detects information, processes it and coordinates responses."],
-["bio7","Biology","🦠","Microorganisms","Microorganisms include bacteria, fungi and microscopic protists. Some are useful and some can cause disease."],
-["bio8","Biology","🌍","Ecosystems","An ecosystem includes organisms and their physical environment. Food chains show energy transfer between organisms."],
+function isAdmin(){
+ let u=user();
+ return !!u && u.username===ADMIN_USERNAME;
+}
+function getBroadcast(){
+ try{return JSON.parse(localStorage.getItem(BROADCAST_KEY)||"{}")}catch(e){return {}}
+}
+function saveBroadcast(data){
+ localStorage.setItem(BROADCAST_KEY,JSON.stringify(data));
+}
+function esc(s){
+ return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
 
-["cs1","Computer Science","💻","Algorithms","An algorithm is a clear step-by-step method for solving a problem."],
-["cs2","Computer Science","🔢","Binary","Computers represent data using bits. Binary uses only 0 and 1."],
-["cs3","Computer Science","🧠","Programming Logic","Conditions, loops and variables let programs make decisions and repeat tasks."],
-["cs4","Computer Science","🗂️","Data Structures","Lists, stacks, queues, sets and dictionaries organise data in different ways."],
-["cs5","Computer Science","🌐","The Internet","The internet is a network of connected devices that communicate using agreed protocols."],
-["cs6","Computer Science","🔐","Cyber Safety","Use strong unique passwords, keep software updated and never share private login information."],
-["cs7","Computer Science","🗄️","Databases","Databases store organised information so it can be searched, updated and managed efficiently."],
-["cs8","Computer Science","🤖","Artificial Intelligence","AI systems can identify patterns, make predictions and generate outputs from data and learned models."],
 
-["py1","Python","🐍","Variables","Example: score = 100. Variables store values and can be changed."],
-["py2","Python","🐍","If Statements","Example: if score >= 50: print('Pass'). Python uses indentation to define blocks."],
-["py3","Python","🔁","Loops","for and while loops repeat code. A loop is useful when the same operation needs to happen many times."],
-["py4","Python","📦","Lists","A list stores multiple values in order. Example: fruits = ['apple','banana']."],
-["py5","Python","🧩","Functions","Functions group reusable code. Define one with def, then call it when you need it."],
-["py6","Python","🗺️","Dictionaries","Dictionaries store key-value pairs. Example: student = {'name':'Aftab','score':100}."],
-["py7","Python","📄","Files","Python can read and write files. Always handle file operations carefully and close files when finished."],
-["py8","Python","🎮","Mini Projects","Combine variables, conditions, loops and functions to build small games, quizzes and utilities."],
-
-["space1","Space Science","🌌","Solar System","The Solar System contains the Sun, eight planets and many smaller bodies."],
-["space2","Space Science","⭐","Stars","Stars are hot balls of plasma that produce energy through nuclear fusion."],
-["space3","Space Science","🌙","The Moon","The Moon orbits Earth and reflects sunlight. Its phases depend on the positions of the Sun, Earth and Moon."],
-["space4","Space Science","🪐","Planet Types","The inner planets are rocky. The outer planets are giant planets with thick atmospheres."],
-["space5","Space Science","🕳️","Black Holes","A black hole is a region where gravity is extremely strong. Its event horizon marks a boundary from which light cannot escape."],
-["space6","Space Science","🚀","Rocket Science","Rockets move by expelling mass. This follows conservation of momentum and allows spacecraft to operate in space."],
-["space7","Space Science","🌠","Galaxies","Galaxies are enormous collections of stars, gas, dust and dark matter held together by gravity."],
-["space8","Space Science","🔭","Telescopes","Telescopes collect electromagnetic radiation so scientists can observe distant objects and study the universe."]
+const subjects = [
+ {id:"math",name:"Mathematics",emoji:"📐",desc:"Build your problem-solving skills.",lessons:[
+  {id:"algebra",title:"Algebra Basics",text:"Algebra uses letters and symbols to represent numbers. For example, if x + 5 = 12, subtract 5 from both sides to get x = 7. Remember: whatever operation you do to one side of an equation, do to the other side too."},
+  {id:"fractions",title:"Fractions",text:"A fraction has a numerator on top and denominator on the bottom. To add fractions with the same denominator, add the numerators. For different denominators, find a common denominator first."},
+  {id:"percentages",title:"Percentages",text:"A percentage means 'out of 100'. To find 20% of 50, calculate 20/100 × 50 = 10. Percentages are useful for discounts, marks and data."}
+ ]},
+ {id:"physics",name:"Physics",emoji:"⚡",desc:"Understand motion, forces and energy.",lessons:[
+  {id:"motion",title:"Motion",text:"Speed tells how much distance is covered per unit time. Speed = distance ÷ time. Velocity is speed with direction. Acceleration is the rate at which velocity changes."},
+  {id:"forces",title:"Forces",text:"A force is a push or pull. Newton's Second Law is F = ma, where F is force, m is mass and a is acceleration. A larger force generally produces a larger acceleration for the same mass."},
+  {id:"energy",title:"Energy",text:"Energy is the ability to do work. Kinetic energy is energy of motion, while potential energy is stored energy. Energy can be transferred or transformed rather than simply disappearing."}
+ ]},
+ {id:"chem",name:"Chemistry",emoji:"🧪",desc:"Explore atoms, elements and reactions.",lessons:[
+  {id:"atoms",title:"Atoms",text:"An atom contains a nucleus with protons and neutrons, surrounded by electrons. Protons have positive charge, electrons negative charge, and neutrons no charge."},
+  {id:"periodic",title:"Periodic Table",text:"The periodic table organizes elements by atomic number. Elements in the same group often have similar chemical properties because they have similar outer-electron arrangements."},
+  {id:"reactions",title:"Chemical Reactions",text:"In a chemical reaction, reactants are changed into products. Atoms are rearranged, but in ordinary chemical reactions they are not created or destroyed."}
+ ]},
+ {id:"biology",name:"Biology",emoji:"🧬",desc:"Learn about living things.",lessons:[
+  {id:"cell",title:"The Cell",text:"The cell is the basic structural and functional unit of life. Plant cells have structures such as a cell wall and chloroplasts, while animal cells do not have these plant-specific structures."},
+  {id:"photosynthesis",title:"Photosynthesis",text:"Plants use light energy to make glucose from carbon dioxide and water. Oxygen is released as a by-product. Chlorophyll helps absorb light energy."}
+ ]},
+ {id:"cs",name:"Computer Science",emoji:"💻",desc:"Think like a programmer.",lessons:[
+  {id:"algorithm",title:"Algorithms",text:"An algorithm is a clear sequence of steps used to solve a problem. Good algorithms are precise and finite. Flowcharts and pseudocode can help plan them before coding."},
+  {id:"variables",title:"Variables",text:"A variable is a named place used to store data. In Python, for example, score = 100 stores the value 100 in a variable named score."}
+ ]},
+ {id:"python",name:"Python",emoji:"🐍",desc:"Start coding with Python.",lessons:[
+  {id:"basics",title:"Python Basics",text:"Python programs can use print() to display information. Variables can store values, and if statements allow a program to make decisions. Example: name = 'Aftab' then print(name)."},
+  {id:"loops",title:"Loops",text:"Loops repeat code. A for loop is useful when you know what sequence you want to go through. A while loop repeats while a condition remains true."}
+ ]},
+ {id:"space",name:"Space Science",emoji:"🌌",desc:"Explore our cosmic neighborhood.",lessons:[
+  {id:"solar",title:"Solar System",text:"Our solar system contains the Sun and the objects that orbit it, including eight planets, dwarf planets, moons, asteroids and comets. The planets orbit the Sun because of gravity."},
+  {id:"stars",title:"Stars",text:"Stars are huge, hot balls of plasma that produce energy through nuclear fusion. Our Sun is a star. Stars have different sizes, temperatures and lifetimes."}
+ ]}
 ];
-const questions=[
-["What is the SI unit of force?",["Joule","Newton","Watt","Pascal"],1],
-["Which planet is the Red Planet?",["Venus","Mars","Jupiter","Mercury"],1],
-["What does F = ma give you?",["Force","Power","Density","Pressure"],0],
-["Which symbol starts a Python comment?",["//","#","<!--","**"],1],
-["What is the basic unit of life?",["Atom","Organ","Cell","Tissue"],2],
-["What is 12 × 5?",["50","60","70","120"],1]
-];
-const badges=[
-["🌟","First Steps","Complete 1 lesson",u=>u.completed.length>=1],
-["📚","Bookworm","Complete 5 lessons",u=>u.completed.length>=5],
-["🧠","Quiz Starter","Finish 1 quiz",u=>u.quizzes>=1],
-["💯","Perfect Score","Get a perfect quiz",u=>u.perfect],
-["🔥","On Fire","Reach a 3-day streak",u=>u.streak>=3],
-["🐍","Python Explorer","Complete a Python lesson",u=>u.completed.some(x=>x.startsWith("py"))],
-["⚛️","Physics Pro","Complete a Physics lesson",u=>u.completed.some(x=>x.startsWith("phy"))],
-["🧪","Chemistry Champ","Complete a Chemistry lesson",u=>u.completed.some(x=>x.startsWith("chem"))],
-["🚀","Space Explorer","Complete a Space lesson",u=>u.completed.some(x=>x.startsWith("space"))],
-["👑","StuddyBuddy Master","Reach 100000 XP",u=>u.xp>=100000],
-["👥","Group Founder","Create a group study room",u=>u.groupRooms>=1],
-["🤝","Team Player","Send a group study message",u=>u.groupMessages>=1],
-["🤖","Bot Buddy","Chat with StuddyBot 10 times",u=>u.botChats>=10],
-["⚡","XP Hunter","Reach 10000 XP",u=>u.xp>=10000],
-["🎓","Subject Master","Complete 8 lessons in one subject",u=>{let c={};u.completed.forEach(id=>{let l=lessons.find(x=>x[0]===id);if(l)c[l[1]]=(c[l[1]]||0)+1});return Object.values(c).some(n=>n>=8)}]
-];
-let signup=false,answers={};
 
-function accounts(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
-function user(){let n=localStorage.getItem(CURRENT),a=accounts();return n&&a[n]?a[n]:null}
-function save(u){let a=accounts();a[u.username]=u;localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem(CURRENT,u.username)}
-function today(){return new Date().toISOString().slice(0,10)}
-function level(x){return Math.floor(x/500)+1}
-function toast(t){let e=document.getElementById("toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),2200)}
-function study(u){let d=today();if(u.lastStudy!==d){let y=new Date();y.setDate(y.getDate()-1);let yd=y.toISOString().slice(0,10);u.streak=u.lastStudy===yd?(u.streak||0)+1:1;u.lastStudy=d}}
-function xp(amount,why){let u=user();if(!u)return;u.xp+=amount;save(u);render();toast("+"+amount+" XP • "+why+" 🎉")}
-function render(){
-let u=user();if(!u)return;
-if(!u.pfp)u.pfp="🎓";
-if(!u.description)u.description="New StuddyBuddy learner";
-if(u.loginRewardDate===undefined)u.loginRewardDate="";if(u.groupRooms===undefined)u.groupRooms=0;if(u.groupMessages===undefined)u.groupMessages=0;if(u.botChats===undefined)u.botChats=0;if(!Array.isArray(u.botHistory))u.botHistory=[];
-save(u);
-document.getElementById("pill").textContent="👤 "+u.username;
-document.getElementById("name").textContent=u.username;
-document.getElementById("level").textContent="Level "+level(u.xp);
-document.getElementById("xptext").textContent=(u.xp%500)+"/500 XP";
-document.getElementById("xpbar").style.width=((u.xp%500)/5)+"%";
-document.getElementById("xp").textContent=u.xp;
-document.getElementById("streak").textContent=u.streak||0;
-document.getElementById("lessonsDone").textContent=u.completed.length;
-document.getElementById("quizzes").textContent=u.quizzes;
-let done=u.daily===today();document.getElementById("daily").textContent=done?"Completed today! Come back tomorrow.":"Complete today's challenge for 100 XP.";
-document.getElementById("dailyBtn").disabled=done;document.getElementById("dailyBtn").textContent=done?"Completed ✓":"Claim +100 XP";
-document.getElementById("profilePfp").textContent=u.pfp||"🎓";document.getElementById("profileName").textContent=(u.pfp||"🎓")+" "+u.username;document.getElementById("pfpInput").value=u.pfp||"🎓";document.getElementById("descInput").value=u.description||"";
-document.getElementById("profileStats").textContent=`Level ${level(u.xp)} • ${u.xp} XP • ${u.completed.length} lessons • ${u.quizzes} quizzes • ${u.streak||0} day streak`;
-renderSubjects();renderBadges()
+const questions = [
+ {q:"What is the chemical symbol for oxygen?",a:["O","Ox","C","Og"],c:0,e:"O is the chemical symbol for oxygen."},
+ {q:"Which law is represented by F = ma?",a:["Newton's First Law","Newton's Second Law","Newton's Third Law","Ohm's Law"],c:1,e:"Newton's Second Law relates force, mass and acceleration."},
+ {q:"Which planet is known as the Red Planet?",a:["Venus","Jupiter","Mars","Mercury"],c:2,e:"Mars is commonly called the Red Planet because of its reddish appearance."},
+ {q:"Which language are we learning in the Python section?",a:["Java","Python","HTML","SQL"],c:1,e:"Python is the programming language in this section."},
+ {q:"What is the basic structural and functional unit of life?",a:["Atom","Organ","Cell","Tissue"],c:2,e:"The cell is the basic unit of life."}
+];
+
+const achievements = [
+ {id:"first",icon:"🌱",name:"First Steps",desc:"Complete your first lesson",test:u=>u.completed.length>=1},
+ {id:"book",icon:"📚",name:"Bookworm",desc:"Complete 5 lessons",test:u=>u.completed.length>=5},
+ {id:"quiz",icon:"📝",name:"Quiz Starter",desc:"Finish a quiz",test:u=>u.quizzes>0},
+ {id:"perfect",icon:"💯",name:"Perfect Score",desc:"Get 5/5 on a quiz",test:u=>u.perfect},
+ {id:"fire",icon:"🔥",name:"On Fire",desc:"Reach a 7 day streak",test:u=>u.streak>=7},
+ {id:"python",icon:"🐍",name:"Python Explorer",desc:"Complete a Python lesson",test:u=>u.completed.some(x=>x.startsWith("python:"))},
+ {id:"physics",icon:"⚡",name:"Physics Pro",desc:"Complete a Physics lesson",test:u=>u.completed.some(x=>x.startsWith("physics:"))},
+ {id:"chem",icon:"🧪",name:"Chemistry Champ",desc:"Complete a Chemistry lesson",test:u=>u.completed.some(x=>x.startsWith("chem:"))},
+ {id:"space",icon:"🌌",name:"Space Explorer",desc:"Complete a Space lesson",test:u=>u.completed.some(x=>x.startsWith("space:"))},
+ {id:"master",icon:"👑",name:"StuddyBuddy Master",desc:"Reach level 10",test:u=>levelOf(u)>=10}
+];
+
+function accounts(){try{return JSON.parse(localStorage.getItem(ACCOUNTS_KEY))||{}}catch(e){return{}}}
+function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
+function currentName(){return localStorage.getItem(CURRENT_KEY)}
+function user(){let a=accounts(),n=currentName();return n&&a[n]?a[n]:null}
+function saveUser(u){let a=accounts();a[u.username]=u;saveAccounts(a)}
+function levelOf(u){return Math.floor((u.xp||0)/500)+1}
+function xpInLevel(u){return (u.xp||0)%500}
+
+function message(id,text,type){let e=document.getElementById(id);e.textContent=text;e.className="msg "+(type||"")}
+
+function switchAuth(which){
+ document.getElementById("login-form").classList.toggle("hidden",which!=="login");
+ document.getElementById("signup-form").classList.toggle("hidden",which!=="signup");
+ document.getElementById("login-tab").classList.toggle("active",which==="login");
+ document.getElementById("signup-tab").classList.toggle("active",which==="signup");
 }
-function renderSubjects(){
-let ss=[...new Set(lessons.map(x=>x[1]))],u=user();
-document.getElementById("subjects").innerHTML=ss.map(s=>{let ls=lessons.filter(x=>x[1]===s),d=ls.filter(x=>u.completed.includes(x[0])).length;return `<button class="subject" onclick="openSubject(${JSON.stringify(s)})"><h2>${ls[0][2]} ${s}</h2><span>${d}/${ls.length} complete</span></button>`}).join("")
+document.getElementById("login-tab").onclick=()=>switchAuth("login");
+document.getElementById("signup-tab").onclick=()=>switchAuth("signup");
+
+document.getElementById("signup-form").onsubmit=e=>{
+ e.preventDefault();
+ let n=document.getElementById("signup-user").value.trim(),p=document.getElementById("signup-pass").value,c=document.getElementById("signup-confirm").value,a=accounts();
+ if(n.length<3)return message("signup-msg","Username must be at least 3 characters.","error");
+ if(!/^[A-Za-z0-9_]+$/.test(n))return message("signup-msg","Use only letters, numbers and _.","error");
+ if(p.length<4)return message("signup-msg","Password must be at least 4 characters.","error");
+ if(p!==c)return message("signup-msg","Passwords do not match.","error");
+ if(Object.keys(a).some(k=>k.toLowerCase()===n.toLowerCase()))return message("signup-msg","That username is already taken!","error");
+ a[n]={username:n,password:p,xp:0,streak:0,completed:[],quizzes:0,perfect:false,daily:"",pfp:"🎓",pfpImage:"",description:""};
+ saveAccounts(a);localStorage.setItem(CURRENT_KEY,n);message("signup-msg","Account created!","success");
+ setTimeout(showApp,350);
+};
+
+document.getElementById("login-form").onsubmit=e=>{
+ e.preventDefault();
+ let n=document.getElementById("login-user").value.trim(),p=document.getElementById("login-pass").value,a=accounts(),key=Object.keys(a).find(k=>k.toLowerCase()===n.toLowerCase());
+ if(!key)return message("login-msg","Username not found.","error");
+ if(a[key].password!==p)return message("login-msg","Incorrect password.","error");
+ localStorage.setItem(CURRENT_KEY,key);message("login-msg","Login successful!","success");setTimeout(showApp,300);
+};
+
+function showApp(){
+ let u=user();
+ if(!u){document.getElementById("app").classList.add("hidden");document.getElementById("auth-page").style.display="flex";return}
+ document.getElementById("auth-page").style.display="none";
+ document.getElementById("app").classList.remove("hidden");
+ updateAll();showPage("home");
 }
-function openSubject(s){
- let u=user(),ls=lessons.filter(x=>x[1]===s);
- document.getElementById("lessonArea").innerHTML=`<div class="card lesson"><div class="row"><h2>${ls[0][2]} ${s} — Choose a topic</h2><button class="secondary right" onclick="lessonArea.innerHTML=''">Close</button></div><p class="muted">Pick what you want to study. There are lots of topics to explore. 📚</p><div class="topicgrid">${ls.map((l,i)=>{let d=u.completed.includes(l[0]);return `<button class="topiccard ${d?"done":""}" onclick="showTopic('${l[0]}')"><span class="topicicon">${l[2]}</span><span><b>${i+1}. ${l[3]}</b><small>${d?"✓ Completed":"Open topic →"}</small></span></button>`}).join("")}</div><div id="topicContent"></div></div>`;
-}
-function showTopic(id){
- let u=user(),l=lessons.find(x=>x[0]===id);if(!u||!l)return;
- let extras={
- "Algebra Basics":["Variables are letters or symbols that represent unknown values.","Key idea: keep an equation balanced by doing the same operation to both sides.","Example: 2x + 4 = 10 → 2x = 6 → x = 3.","Try it: solve 3x + 2 = 14."],
- "Geometry Basics":["Angles and shapes are studied using measurements and properties.","A triangle has interior angles adding to 180°.","Rectangle area = length × width; triangle area = ½ × base × height.","Try it: find the area of a triangle with base 8 cm and height 5 cm."],
- "Newton's Second Law":["Force describes a push or pull that can change motion.","Formula: F = ma.","If mass = 4 kg and acceleration = 3 m/s², force = 12 N.","Remember: larger mass or acceleration means a larger force."],
- "The Mole":["A mole is a counting unit used for particles such as atoms and molecules.","1 mole ≈ 6.022 × 10²³ particles.","Molar mass tells you how many grams one mole of a substance has.","Example: 18 g of water is about 1 mole of H₂O."],
- "Cells":["Cells are the basic structural and functional units of life.","Important parts include the cell membrane, cytoplasm and genetic material.","Plant cells also have structures such as a cell wall and chloroplasts.","Cells can specialise for different jobs."],
- "Algorithms":["An algorithm is a clear sequence of steps used to solve a problem.","Good algorithms have a defined goal and unambiguous steps.","Example: a recipe can be viewed as an everyday algorithm.","Programming turns algorithms into instructions a computer can execute."],
- "Variables":["Variables store values that a Python program can use.","Example: score = 100.","A variable can be changed later, such as score = score + 10.","Choose clear variable names so your code is easy to understand."],
- "Solar System":["The Solar System contains the Sun, eight planets, dwarf planets, moons and many smaller bodies.","The inner planets are rocky while the outer planets are giant planets.","Gravity keeps planets and many other objects in orbit.","Space is full of objects that scientists continue to study."]
- };
- let content=extras[l[3]]||[
- "Core idea: "+l[4],
- "Break the topic into smaller ideas and learn one at a time.",
- "Write down important definitions, formulas or examples in your own words.",
- "Practice: explain this topic without looking at your notes.",
- "Challenge: create one question about this topic and answer it yourself."
- ];
- document.getElementById("topicContent").innerHTML=`<div class="topiccontent"><div class="row"><h2>${l[2]} ${l[3]}</h2><span class="pill">${u.completed.includes(id)?"✓ Completed":"+25 XP available"}</span></div>${content.map((x,i)=>`<article><h3>${i===0?"📖 Learn":i===1?"🧠 Understand":i===2?"📝 Example":i===3?"🔁 Practice":"🎯 Challenge"}</h3><p>${x}</p></article>`).join("")}<button class="primary" onclick="completeLesson('${id}')">${u.completed.includes(id)?"✓ Already Completed":"Complete Topic +25 XP"}</button></div>`;
-}
-function completeLesson(id){
-let u=user(),l=lessons.find(x=>x[0]===id);if(!u||!l)return;
-if(u.completed.includes(id)){toast("Already completed!");return}
-u.completed.push(id);study(u);save(u);xp(25,"Lesson complete");openSubject(l[1])
-}
-function renderQuiz(){
-answers={};document.getElementById("quizArea").innerHTML=`<div class="card">${questions.map((q,i)=>`<div class="q"><h3>${i+1}. ${q[0]}</h3><div class="answers">${q[1].map((a,j)=>`<button data-q="${i}" data-a="${j}" onclick="pick(${i},${j})">${a}</button>`).join("")}</div></div>`).join("")}<button id="submitQuiz" class="primary" onclick="submitQuiz()">Submit Quiz</button><p id="quizResult" class="msg"></p></div>`
-}
-function pick(i,j){answers[i]=j;document.querySelectorAll(`[data-q="${i}"]`).forEach(b=>b.classList.remove("selected"));document.querySelector(`[data-q="${i}"][data-a="${j}"]`).classList.add("selected")}
-function submitQuiz(){
-if(Object.keys(answers).length!==questions.length){quizResult.textContent="Answer every question first.";quizResult.className="msg err";return}
-let score=questions.reduce((n,q,i)=>n+(answers[i]===q[2]?1:0),0),u=user();u.quizzes++;u.perfect=u.perfect||score===questions.length;study(u);save(u);
-questions.forEach((q,i)=>document.querySelectorAll(`[data-q="${i}"]`).forEach(b=>{let j=+b.dataset.a;if(j===q[2])b.classList.add("correct");else if(answers[i]===j)b.classList.add("wrong")}));
-document.getElementById("submitQuiz").disabled=true;document.getElementById("quizResult").textContent=`Score: ${score}/${questions.length}`;document.getElementById("quizResult").className="msg ok";xp(score===questions.length?100:50,"Quiz complete")
-}
-function renderLeaderboard(){
-let list=Object.values(accounts()).sort((a,b)=>(b.xp||0)-(a.xp||0));
-document.getElementById("leaderboardList").innerHTML=list.length?list.map((u,i)=>`<div class="card" style="margin:8px 0;padding:14px"><div class="row"><b>#${i+1}</b><span style="font-size:28px">${u.pfp||"🎓"}</span><div><strong>${u.username}</strong><br><small>${u.description||"StuddyBuddy learner"}</small></div><strong class="right">${u.xp||0} XP</strong></div></div>`).join(""):"No accounts yet.";
-}
-function renderBadges(){let u=user();document.getElementById("achievementGrid").innerHTML=badges.map(b=>{let ok=b[3](u);return `<div class="card badge ${ok?"":"locked"}"><div class="icon">${b[0]}</div><div><h3>${b[1]}</h3><p>${b[2]}</p><b>${ok?"✓ Unlocked":"🔒 Locked"}</b></div></div>`}).join("")}
-function esc(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
-function bot(q){
- let x=q.toLowerCase().trim();
- if(/^(hi|hello|hey|yo|hii)/.test(x))return"Hey! 👋 I'm StuddyBot. Tell me what you're studying and I'll help you understand it step by step.";
- if(x.includes("quiz me"))return"Sure! 🧠 Quick quiz: What is the SI unit of force? A) Joule  B) Newton  C) Watt  D) Pascal. Reply with A, B, C or D.";
- if(x.includes("study plan"))return"Here's a simple plan: 1) Pick one topic. 2) Study it for 25 minutes. 3) Close your notes and recall the key ideas. 4) Do 5 practice questions. 5) Take a short break and repeat. 📚";
- if(x.includes("fun fact"))return"🌌 Fun fact: A day on Venus is longer than a Venus year. Venus rotates very slowly compared with how quickly it orbits the Sun.";
- if(x.includes("f=ma")||x.includes("newton"))return"Newton's second law is F = ma. Force equals mass × acceleration. Example: if m = 2 kg and a = 3 m/s², F = 6 N.";
- if(x.includes("speed"))return"Speed tells you how much distance is covered per unit time: speed = distance ÷ time. Its SI unit is m/s.";
- if(x.includes("mole"))return"One mole contains about 6.022 × 10²³ particles. It is a counting unit used in chemistry, similar to how a dozen means 12.";
- if(x.includes("atom"))return"An atom has a nucleus containing protons and neutrons, with electrons occupying regions around the nucleus.";
- if(x.includes("cell"))return"The cell is the basic structural and functional unit of life. Cells can have specialised structures that perform different jobs.";
- if(x.includes("python"))return"Python is a programming language known for readable syntax. Important basics include variables, if statements, loops, functions, lists and dictionaries. Want an example?";
- if(x.includes("red planet"))return"Mars is called the Red Planet because iron-containing minerals on its surface give it a reddish appearance.";
- if(x.includes("solar system"))return"Our Solar System contains the Sun, eight planets, dwarf planets, moons, asteroids, comets and other smaller bodies.";
- if(x.includes("photosynthesis"))return"Photosynthesis lets plants use light energy to make glucose from carbon dioxide and water, with oxygen released as a product.";
- if(x.includes("periodic table"))return"The periodic table arranges elements by atomic number. Elements in the same group often have similar chemical properties.";
- if(x.includes("ohm")||x.includes("electricity"))return"Ohm's law is V = IR, where V is voltage, I is current and R is resistance.";
- if(x.includes("black hole"))return"A black hole is a region of spacetime with gravity so strong that, beyond its event horizon, light cannot escape.";
- if(x.includes("trigonometry")||x.includes("sin")||x.includes("cos")||x.includes("tan"))return"For a right triangle: sin θ = opposite/hypotenuse, cos θ = adjacent/hypotenuse, and tan θ = opposite/adjacent.";
- if(x.includes("study")||x.includes("focus"))return"Try a 25-minute focus session: choose one small goal, remove distractions, study actively, then take a short break. 🔥";
- let m=x.match(/^(-?\d+(?:\.\d+)?)\s*([+\-*x×÷/])\s*(-?\d+(?:\.\d+)?)$/);
- if(m){let a=Number(m[1]),op=m[2],b=Number(m[3]);let r=op==='+'?a+b:op==='-'?a-b:(op==='*'||op==='x'||op==='×')?a*b:(b===0?'undefined':a/b);return `The answer is ${r}. 🧮`;}
- if(x.includes("explain")||x.includes("what is")||x.includes("how does"))return"I can help! 📚 Tell me the exact topic or paste the question, and I'll break it into simple steps, give an example, and then check your understanding.";
- return"I can help with maths, physics, chemistry, biology, computer science, Python, space and study skills. Try: ‘Explain Newton's second law simply’ or ‘Quiz me’. 🤖";
-}
-function saveBotHistory(u){u.botHistory=(u.botHistory||[]).slice(-30);save(u)}
-function addBotMessage(text,me=false){messages.innerHTML+=`<div class="bubble ${me?'mine':'ai'}">${esc(text)}</div>`;messages.scrollTop=messages.scrollHeight}
-function initBot(){
+function logout(){localStorage.removeItem(CURRENT_KEY);location.reload()}
+document.getElementById("logout-btn").onclick=logout;
+
+function updateAll(){
  let u=user();if(!u)return;
- if(!messages.children.length){if((u.botHistory||[]).length)u.botHistory.forEach(m=>addBotMessage(m.text,m.me));else addBotMessage("Hi! 👋 I'm StuddyBot. What are you studying today?");}
+ let l=levelOf(u),x=xpInLevel(u),name=u.username;
+ document.getElementById("top-user").textContent=name;
+ document.getElementById("top-avatar").textContent=name[0].toUpperCase();
+ document.getElementById("welcome").textContent="Welcome back, "+name+"!";
+ document.getElementById("xp-stat").textContent=u.xp;
+ document.getElementById("streak-stat").textContent=u.streak+" day"+(u.streak===1?"":"s");
+ document.getElementById("level-stat").textContent=l;
+ document.getElementById("lesson-stat").textContent=u.completed.length;
+ document.getElementById("level-text").textContent="Level "+l+" • "+x+" / 500 XP";
+ document.getElementById("xp-fill").style.width=(x/500*100)+"%";
+ let pfp=document.getElementById("profile-pfp");
+ if(pfp){
+   if(u.pfpImage) pfp.innerHTML='<img src="'+u.pfpImage+'" alt="Profile picture">';
+   else pfp.textContent=u.pfp||"🎓";
+ }
+ document.getElementById("profile-name").textContent=name;
+ document.getElementById("profile-meta").textContent=(u.description?u.description+" • ":"")+"Member since "+new Date().toLocaleDateString();
+ document.getElementById("profile-xp").textContent=u.xp;
+ document.getElementById("profile-level").textContent=l;
+ document.getElementById("profile-streak").textContent=u.streak;
+ renderSubjects();renderAchievements();
+ let today=new Date().toDateString();
+ document.getElementById("challenge-btn").textContent=u.daily===today?"Completed ✓":"Claim +100 XP";
+ document.getElementById("challenge-btn").disabled=u.daily===today;
 }
-function quickPrompt(t){botInput.value=t;botForm.requestSubmit()}
-function groupStore(){try{return JSON.parse(localStorage.getItem("StuddyBuddyRoomsV7")||"{}")}catch(e){return {}}}
-function saveRooms(r){localStorage.setItem("StuddyBuddyRoomsV7",JSON.stringify(r))}
-function currentRoom(){return localStorage.getItem("StuddyBuddyRoomV7")||""}
-function roomCodeGen(){return Math.random().toString(36).slice(2,8).toUpperCase()}
-function renderRoom(){
- let code=currentRoom(),rooms=groupStore(),room=rooms[code],u=user();
- if(!room){groupSetup.classList.remove("hidden");groupRoom.classList.add("hidden");renderTasks();return}
- groupSetup.classList.add("hidden");groupRoom.classList.remove("hidden");roomTitle.textContent="👥 "+room.name;roomCodeShow.textContent="Room code: "+code;
- roomMessages.innerHTML=(room.messages||[]).map(m=>`<div class="roommsg ${m.user===u.username?'me':''}"><b>${esc(m.user)}</b><br>${esc(m.text)}</div>`).join("")||'<p class="muted">No messages yet. Say hi! 👋</p>';roomMessages.scrollTop=roomMessages.scrollHeight;renderTasks();
+document.getElementById("challenge-btn").onclick=()=>{
+ let u=user(),today=new Date().toDateString();if(u.daily===today)return;
+ u.daily=today;u.xp+=100;saveUser(u);updateAll();
+};
+
+const titles={home:"Dashboard",lessons:"Learn",quiz:"Quizzes",bot:"StuddyBot",achievements:"Achievements",profile:"Profile",admin:"Admin Panel"};
+function showPage(p){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ document.getElementById("page-"+p).classList.add("active");
+ document.querySelectorAll(".nav button[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
+ document.getElementById("page-title").textContent=titles[p];
+ document.getElementById("sidebar").classList.remove("open");
 }
-function renderTasks(){
- let code=currentRoom(),rooms=groupStore(),room=rooms[code];let tasks=(room&&room.tasks)||[];
- tasksDiv.innerHTML=tasks.length?tasks.map((t,i)=>`<div class="task ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})"><span>${esc(t.text)}</span></div>`).join(""): '<p class="muted">No tasks yet. Add one for the group!</p>';
+function setupAdminNav(){
+ let existing=document.querySelector('.nav button[data-page="admin"]');
+ if(isAdmin()){
+   if(!existing){
+     let b=document.createElement("button");
+     b.dataset.page="admin";
+     b.textContent="🛠️ Admin";
+     document.querySelector("#sidebar .nav").appendChild(b);
+     b.onclick=()=>showPage("admin");
+   }
+ }else if(existing){
+   existing.remove();
+ }
+ document.querySelectorAll(".nav button[data-page]").forEach(b=>{
+   if(!b.dataset.bound){b.dataset.bound="1";b.onclick=()=>showPage(b.dataset.page);}
+ });
 }
-function toggleTask(i){let code=currentRoom(),rooms=groupStore(),r=rooms[code];if(!r)return;r.tasks[i].done=!r.tasks[i].done;saveRooms(rooms);renderRoom();broadcastRoom()}
-function broadcastRoom(){try{if(window.roomBC)window.roomBC.postMessage({type:"refresh",code:currentRoom()})}catch(e){}}
-function setupGroup(){
- createRoom.onclick=()=>{let code=roomCode.value.trim().toUpperCase()||roomCodeGen(),name=roomName.value.trim()||"Study Squad",rooms=groupStore();if(rooms[code]){toast("That room code is already in use. Try another.");return}rooms[code]={name,messages:[],tasks:[],createdBy:user().username};saveRooms(rooms);localStorage.setItem("StuddyBuddyRoomV7",code);let u=user();u.groupRooms=(u.groupRooms||0)+1;save(u);renderRoom();renderBadges();toast("Room created! 👥")};
- joinRoom.onclick=()=>{let code=roomCode.value.trim().toUpperCase(),rooms=groupStore();if(!code||!rooms[code]){toast("Room not found on this browser.");return}localStorage.setItem("StuddyBuddyRoomV7",code);renderRoom();toast("Joined room! 🤝")};
- leaveRoom.onclick=()=>{localStorage.removeItem("StuddyBuddyRoomV7");renderRoom();toast("Left the room.")};
- roomChatForm.onsubmit=e=>{e.preventDefault();let text=roomChatInput.value.trim(),code=currentRoom(),rooms=groupStore(),r=rooms[code];if(!text||!r)return;r.messages=r.messages||[];r.messages.push({user:user().username,text});r.messages=r.messages.slice(-100);let u=user();u.groupMessages=(u.groupMessages||0)+1;save(u);saveRooms(rooms);roomChatInput.value="";renderRoom();renderBadges();broadcastRoom()};
- taskForm.onsubmit=e=>{e.preventDefault();let text=taskInput.value.trim(),code=currentRoom(),rooms=groupStore(),r=rooms[code];if(!text||!r){toast("Join a room first!");return}r.tasks=r.tasks||[];r.tasks.push({text,done:false});saveRooms(rooms);taskInput.value="";renderRoom();broadcastRoom()};
- try{window.roomBC=new BroadcastChannel("StuddyBuddyGroupV7");window.roomBC.onmessage=()=>renderRoom()}catch(e){}
- renderRoom();
+setupAdminNav();
+document.getElementById("menu-btn").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+
+function renderSubjects(){
+ let box=document.getElementById("subjects");
+ if(!box)return;
+ box.innerHTML="";
+ subjects.forEach(s=>{
+   let d=document.createElement("div");
+   d.className="subject";
+   d.innerHTML="<div class='emoji'>"+s.emoji+"</div><h3>"+esc(s.name)+"</h3><p>"+esc(s.desc)+"</p><button class='primary' type='button'>View Lessons →</button>";
+   d.querySelector("button").addEventListener("click",()=>openSubject(s.id));
+   box.appendChild(d);
+ });
 }
-let timerSeconds=1500,timerInterval=null;
-function renderTimer(){let m=String(Math.floor(timerSeconds/60)).padStart(2,"0"),s=String(timerSeconds%60).padStart(2,"0");timer.textContent=m+":"+s}
-function setupTimer(){timerStart.onclick=()=>{if(timerInterval){clearInterval(timerInterval);timerInterval=null;timerStart.textContent="Start";return}timerStart.textContent="Pause";timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;renderTimer()}else{clearInterval(timerInterval);timerInterval=null;timerStart.textContent="Start";xp(50,"Focus session");toast("Focus session complete! +50 XP 🎉")}},1000)};timerReset.onclick=()=>{clearInterval(timerInterval);timerInterval=null;timerSeconds=1500;timerStart.textContent="Start";renderTimer()};renderTimer()}
-function page(id){
-document.querySelectorAll(".page").forEach(x=>x.classList.remove("onpage"));document.getElementById(id).classList.add("onpage");
-document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("on",x.dataset.page===id));
-if(id==="quiz")renderQuiz();if(id==="bot")initBot();if(id==="leaderboard")renderLeaderboard();if(id==="group")renderRoom();render()
+function openSubject(id){
+ let s=subjects.find(x=>x.id===id);
+ if(!s)return;
+ let box=document.getElementById("lesson-browser");
+ box.innerHTML="<button class='back' id='lesson-back' type='button'>← Back to subjects</button><h2>"+s.emoji+" "+esc(s.name)+"</h2><div class='lesson-list' id='lesson-list'></div>";
+ document.getElementById("lesson-back").onclick=closeLesson;
+ let list=box.querySelector("#lesson-list"),u=user();
+ s.lessons.forEach(l=>{
+   let done=u.completed.includes(s.id+":"+l.id);
+   let d=document.createElement("div");
+   d.className="lesson "+(done?"done":"");
+   d.innerHTML="<div><b>"+esc(l.title)+"</b><div style='color:var(--muted);font-size:13px;margin-top:4px'>"+esc(l.text.slice(0,100))+"...</div></div><button type='button'>"+(done?"Completed ✓":"Open")+"</button>";
+   d.querySelector("button").onclick=()=>openLesson(s.id,l.id);
+   list.appendChild(d);
+ });
+ document.getElementById("lesson-view").classList.add("hidden");
+ box.classList.remove("hidden");
 }
-function applyTheme(){document.body.classList.toggle("dark",localStorage.getItem(THEME)==="1")}
-function start(){
-if(user()){
-document.getElementById("auth").style.display="none";document.getElementById("app").style.display="block";applyTheme();
-let u=user();
-if(u.loginRewardDate!==today()){u.loginRewardDate=today();u.xp=(u.xp||0)+25;save(u);setTimeout(()=>toast("Daily login reward: +25 XP 🎁"),400)}
-render();
-}else{document.getElementById("auth").style.display="grid";document.getElementById("app").style.display="none"}
+function closeLesson(){
+ let box=document.getElementById("lesson-browser");
+ box.classList.remove("hidden");
+ renderSubjects();
+ document.getElementById("lesson-view").classList.add("hidden");
+}
+let currentLesson=null;
+function openLesson(sid,lid){
+ let s=subjects.find(x=>x.id===sid),l=s.lessons.find(x=>x.id===lid);currentLesson={sid,lid};
+ document.getElementById("lesson-browser").classList.add("hidden");document.getElementById("lesson-view").classList.remove("hidden");
+ document.getElementById("lesson-title").textContent=s.emoji+" "+l.title;
+ document.getElementById("lesson-content").innerHTML="<p>"+l.text+"</p><h3>💡 Quick Check</h3><p>Try explaining the main idea in your own words. Teaching a concept to yourself is a great way to remember it!</p>";
+ let done=user().completed.includes(sid+":"+lid),btn=document.getElementById("complete-lesson");btn.textContent=done?"✅ Completed":"✅ Complete Lesson (+25 XP)";btn.disabled=done;
+}
+document.getElementById("complete-lesson").onclick=()=>{
+ let u=user(),key=currentLesson.sid+":"+currentLesson.lid;if(u.completed.includes(key))return;
+ u.completed.push(key);u.xp+=25;
+ // simple streak: completing a lesson counts as an active study day
+ let today=new Date().toDateString();
+ u.streak=Math.max(u.streak||0,1);
+ if(u.lastStudy!==today){u.streak=(u.lastStudy&&new Date(u.lastStudy).toDateString()===new Date(Date.now()-86400000).toDateString())?(u.streak+1):1;u.lastStudy=new Date().toISOString()}
+ saveUser(u);updateAll();openSubject(currentLesson.sid);
+};
+
+let qi=0,qs=0,answered=false;
+function startQuiz(){qi=0;qs=0;answered=false;document.getElementById("quiz-start").classList.add("hidden");document.getElementById("quiz-result").classList.add("hidden");document.getElementById("quiz-game").classList.remove("hidden");renderQuestion()}
+function renderQuestion(){
+ let q=questions[qi];answered=false;document.getElementById("quiz-count").textContent="Question "+(qi+1)+" of "+questions.length;document.getElementById("question").textContent=q.q;document.getElementById("answers").innerHTML="";document.getElementById("explanation").textContent="";document.getElementById("next-btn").classList.add("hidden");document.getElementById("score").textContent="Score: "+qs;
+ q.a.forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=a;b.onclick=()=>answer(i,b);document.getElementById("answers").appendChild(b)})
+}
+function answer(i,btn){
+ if(answered)return;answered=true;let q=questions[qi],bs=[...document.querySelectorAll(".answer")];bs[q.c].classList.add("correct");
+ if(i===q.c)qs++;else btn.classList.add("wrong");
+ document.getElementById("explanation").textContent=q.e;document.getElementById("score").textContent="Score: "+qs;document.getElementById("next-btn").classList.remove("hidden");
+}
+function nextQuestion(){qi++;if(qi>=questions.length)finishQuiz();else renderQuestion()}
+function finishQuiz(){
+ let u=user();u.quizzes++;if(qs===5){u.perfect=true;u.xp+=100}else u.xp+=50;saveUser(u);updateAll();
+ document.getElementById("quiz-game").classList.add("hidden");document.getElementById("quiz-result").classList.remove("hidden");document.getElementById("result-score").textContent="You scored "+qs+"/5!";document.getElementById("result-xp").textContent="You earned "+(qs===5?100:50)+" XP.";
+}
+function resetQuiz(){document.getElementById("quiz-result").classList.add("hidden");document.getElementById("quiz-start").classList.remove("hidden")}
+
+function renderAchievements(){
+ let u=user(),box=document.getElementById("achievement-grid");box.innerHTML="";
+ achievements.forEach(a=>{let ok=a.test(u),d=document.createElement("div");d.className="achievement "+(ok?"unlocked":"");d.innerHTML="<div class='big'>"+a.icon+"</div><h3>"+a.name+"</h3><small>"+a.desc+"</small><div style='margin-top:9px;font-size:12px;color:"+(ok?"#18a957":"var(--muted)")+"'>"+(ok?"UNLOCKED":"LOCKED")+"</div>";box.appendChild(d)})
 }
 
-loginTab.onclick=()=>{signup=false;loginTab.classList.add("on");signupTab.classList.remove("on");authButton.textContent="Login";authMsg.textContent=""};
-signupTab.onclick=()=>{signup=true;signupTab.classList.add("on");loginTab.classList.remove("on");authButton.textContent="Create account";authMsg.textContent=""};
-authForm.onsubmit=e=>{e.preventDefault();let n=username.value.trim(),p=password.value,a=accounts();authMsg.className="msg";
-if(!/^[A-Za-z0-9_]{3,20}$/.test(n)){authMsg.textContent="Username: 3–20 letters, numbers or _.";authMsg.classList.add("err");return}
-if(p.length<4){authMsg.textContent="Password must be at least 4 characters.";authMsg.classList.add("err");return}
-if(signup){if(a[n]){authMsg.textContent="Username already taken.";authMsg.classList.add("err");return}a[n]={username:n,password:p,xp:50,streak:0,completed:[],quizzes:0,perfect:false,daily:"",lastStudy:"",loginRewardDate:today(),pfp:"🎓",description:"New StuddyBuddy learner",groupRooms:0,groupMessages:0,botChats:0,botHistory:[]};localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem(CURRENT,n);start();toast("Account created! 🎉")}
-else{if(!a[n]||a[n].password!==p){authMsg.textContent="Incorrect username or password.";authMsg.classList.add("err");return}localStorage.setItem(CURRENT,n);start();toast("Logged in! 👋")}};
-logout.onclick=()=>{localStorage.removeItem(CURRENT);location.reload()};
-document.getElementById("theme").onclick=()=>{localStorage.setItem(THEME,localStorage.getItem(THEME)==="1"?"0":"1");applyTheme()};
-saveProfile.onclick=()=>{let u=user();u.pfp=pfpInput.value.trim()||"🎓";u.description=descInput.value.trim()||"StuddyBuddy learner";save(u);render();toast("Profile saved! ✨")};
-document.getElementById("profileTheme").onclick=()=>document.getElementById("theme").click();
-dailyBtn.onclick=()=>{let u=user();if(u.daily===today())return;u.daily=today();study(u);save(u);xp(100,"Daily challenge")};
-reset.onclick=()=>{if(confirm("Reset all your progress?")){let u=user();u.xp=0;u.streak=0;u.completed=[];u.quizzes=0;u.perfect=false;u.daily="";u.lastStudy="";u.groupRooms=0;u.groupMessages=0;u.botChats=0;u.botHistory=[];save(u);render();toast("Progress reset.")}};
-document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-window.addEventListener("DOMContentLoaded",()=>{setupGroup();setupTimer();});
-botForm.onsubmit=e=>{e.preventDefault();let q=botInput.value.trim(),u=user();if(!q||!u)return;addBotMessage(q,true);u.botHistory=u.botHistory||[];u.botHistory.push({text:q,me:true});u.botChats=(u.botChats||0)+1;save(u);renderBadges();let t=document.createElement("div");t.className="bubble ai typing";t.textContent="StuddyBot is thinking…";messages.appendChild(t);messages.scrollTop=messages.scrollHeight;setTimeout(()=>{let a=bot(q);t.className="bubble ai";t.textContent=a;u.botHistory.push({text:a,me:false});saveBotHistory(u);messages.scrollTop=messages.scrollHeight},450);botInput.value=""};
-window.openSubject=openSubject;window.completeLesson=completeLesson;window.pick=pick;window.submitQuiz=submitQuiz;
-window.addEventListener("DOMContentLoaded",()=>{const bar=document.getElementById("loadbar");const screen=document.getElementById("loading");bar.style.width="100%";setTimeout(()=>{screen.remove();start()},250)});
-setTimeout(()=>{const screen=document.getElementById("loading");if(screen){screen.remove();start()}},2000);
+
+function setupProfile(){
+ let file=document.getElementById("pfp-file");
+ let remove=document.getElementById("remove-pfp");
+ let save=document.getElementById("save-profile");
+ if(file)file.onchange=e=>{
+   let f=e.target.files[0];
+   if(!f)return;
+   if(f.size>2*1024*1024){
+     alert("Please choose an image 2 MB or smaller.");
+     e.target.value="";
+     return;
+   }
+   let reader=new FileReader();
+   reader.onload=()=>{
+     let u=user();
+     if(!u)return;
+     u.pfpImage=reader.result;
+     u.pfp="🖼️";
+     saveUser(u);
+     updateAll();
+   };
+   reader.readAsDataURL(f);
+ };
+ if(remove)remove.onclick=()=>{
+   let u=user();if(!u)return;
+   u.pfpImage="";
+   u.pfp="🎓";
+   saveUser(u);
+   if(file)file.value="";
+   updateAll();
+ };
+ if(save)save.onclick=()=>{
+   let u=user();if(!u)return;
+   u.pfp=document.getElementById("pfp-emoji").value.trim()||u.pfp||"🎓";
+   u.description=document.getElementById("profile-desc").value.trim();
+   saveUser(u);
+   updateAll();
+   alert("Profile saved!");
+ };
+}
+function loadProfileFields(){
+ let u=user();if(!u)return;
+ document.getElementById("pfp-emoji").value=u.pfp||"🎓";
+ document.getElementById("profile-desc").value=u.description||"";
+}
+
+function botReply(text){
+ let t=text.toLowerCase();
+ if(/^(hi|hello|hey)\b/.test(t))return"Hey! 👋 What are we studying today?";
+ if(t.includes("force")||t.includes("physics"))return"⚡ Physics tip: Newton's Second Law is F = ma. Force equals mass multiplied by acceleration.";
+ if(t.includes("speed"))return"🏃 Speed = distance ÷ time. If you travel 100 m in 20 s, your speed is 5 m/s.";
+ if(t.includes("atom")||t.includes("chem"))return"🧪 An atom has protons and neutrons in its nucleus, with electrons around the nucleus. Ask me about the periodic table too!";
+ if(t.includes("algebra")||t.includes("math"))return"📐 For algebra, remember to do the same operation to both sides. Example: x + 5 = 12 → x = 7.";
+ if(t.includes("python")||t.includes("code"))return"🐍 Python tip: print() displays information, variables store values, and loops repeat code. Try asking me about loops!";
+ if(t.includes("space")||t.includes("planet"))return"🌌 Our solar system has eight planets orbiting the Sun. Want to learn about stars or the planets?";
+ if(t.includes("cell")||t.includes("biology"))return"🧬 The cell is the basic structural and functional unit of life. Plant cells have a cell wall and chloroplasts.";
+ if(t.includes("study")||t.includes("focus"))return"🧠 Try 25 minutes of focused study, then take a short break. Put your phone away and choose one small goal.";
+ return"I can help with 📐 math, ⚡ physics, 🧪 chemistry, 🧬 biology, 💻 computer science, 🐍 Python, 🌌 space, and study tips. Ask me something specific!";
+}
+function addBubble(text,me=false){let d=document.createElement("div");d.className="bubble "+(me?"me":"bot");d.textContent=text;let c=document.getElementById("chatbox");c.appendChild(d);c.scrollTop=c.scrollHeight}
+function sendBot(){let i=document.getElementById("bot-input"),t=i.value.trim();if(!t)return;addBubble(t,true);i.value="";setTimeout(()=>addBubble(botReply(t)),250)}
+document.getElementById("bot-send").onclick=sendBot;
+document.getElementById("bot-input").onkeydown=e=>{if(e.key==="Enter")sendBot()};
+
+
+function renderBroadcast(){
+ let data=getBroadcast(),box=document.getElementById("global-notice");
+ if(!box)return;
+ if(!data.announcement&&!data.poll){
+   box.classList.add("hidden");
+   box.innerHTML="";
+   return;
+ }
+ box.classList.remove("hidden");
+ let html="";
+ if(data.announcement)html+="<div><b>📢 Global Announcement</b><div style='margin-top:5px'>"+esc(data.announcement)+"</div></div>";
+ if(data.poll){
+   html+="<div style='margin-top:13px'><b>📊 "+esc(data.poll.question)+"</b><div class='poll-opts'>";
+   data.poll.options.forEach((o,i)=>{
+     let count=(data.poll.votes||[]).filter(v=>v===i).length;
+     html+="<button type='button' data-vote='"+i+"'>"+esc(o)+" <span style='float:right;color:var(--muted)'>"+(count?count+" vote"+(count===1?"":"s"):"")+"</span></button>";
+   });
+   html+="</div></div>";
+ }
+ box.innerHTML=html;
+ box.querySelectorAll("[data-vote]").forEach(b=>b.onclick=()=>votePoll(Number(b.dataset.vote)));
+}
+function votePoll(index){
+ let data=getBroadcast(),u=user();
+ if(!data.poll||!u)return;
+ data.poll.voters=data.poll.voters||[];
+ data.poll.votes=data.poll.votes||[];
+ if(data.poll.voters.includes(u.username)){
+   alert("You already voted in this poll!");
+   return;
+ }
+ if(index<0||index>=data.poll.options.length)return;
+ data.poll.voters.push(u.username);
+ data.poll.votes.push(index);
+ saveBroadcast(data);
+ renderBroadcast();
+}
+function setupAdminActions(){
+ if(!isAdmin())return;
+ let send=document.getElementById("send-announcement");
+ let poll=document.getElementById("create-poll");
+ let clear=document.getElementById("clear-broadcasts");
+ if(send)send.onclick=()=>{
+   let value=document.getElementById("admin-announcement").value.trim();
+   if(!value){alert("Write an announcement first.");return;}
+   let data=getBroadcast();
+   data.announcement=value;
+   saveBroadcast(data);
+   renderBroadcast();
+   alert("Global announcement published!");
+ };
+ if(poll)poll.onclick=()=>{
+   let q=document.getElementById("poll-question").value.trim();
+   let opts=[
+     document.getElementById("poll-a").value.trim(),
+     document.getElementById("poll-b").value.trim(),
+     document.getElementById("poll-c").value.trim(),
+     document.getElementById("poll-d").value.trim()
+   ].filter(Boolean);
+   if(!q||opts.length<2){alert("Add a question and at least 2 options.");return;}
+   saveBroadcast({announcement:getBroadcast().announcement||"",poll:{question:q,options:opts,votes:[],voters:[]}});
+   renderBroadcast();
+   alert("Global poll created!");
+ };
+ if(clear)clear.onclick=()=>{
+   localStorage.removeItem(BROADCAST_KEY);
+   renderBroadcast();
+   alert("Announcement and poll cleared.");
+ };
+}
+
+function toggleDark(){let d=document.body.classList.toggle("dark");localStorage.setItem(THEME_KEY,d?"1":"0")}
+document.getElementById("dark-btn").onclick=toggleDark;
+if(localStorage.getItem(THEME_KEY)==="1")document.body.classList.add("dark");
+
+setupProfile();
+setupAdminNav();
+setupAdminActions();
+if(user())loadProfileFields();
+renderBroadcast();
+
+window.addEventListener("storage",e=>{
+ if(e.key===BROADCAST_KEY)renderBroadcast();
+ if(e.key===ACCOUNTS_KEY){setupAdminNav();renderBroadcast();if(user()){updateAll();loadProfileFields();}}
+});
+
+window.addEventListener("load",()=>{
+ let b=document.getElementById("loadbar");b.style.width="100%";
+ setTimeout(()=>{let s=document.getElementById("loading-screen");s.style.opacity="0";setTimeout(()=>s.remove(),500);if(user())showApp();},850);
+});
 </script>
 </body>
 </html>
